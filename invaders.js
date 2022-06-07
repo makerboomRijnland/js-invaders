@@ -21,7 +21,19 @@ class Enemy {
     update() {
         if (this.cooldown == 0) {
             this.x += Math.floor(Math.random() * 20 - 10);
+            if(this.x <= 0){
+                this.x += 10;
+            }
+            if(this.x >= 750){
+                this.x -= 10;
+            }
             this.y += Math.floor(Math.random() * 20 - 10);
+            if(this.y <= 0){
+                this.y += 10;
+            }
+            if(this.y >= 550){
+                this.y -= 10;
+            }
             this.cooldown = 15;
             
         }
