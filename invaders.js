@@ -6,16 +6,29 @@ class Enemy {
     y;
     size;
     hp;
+    cooldown;
 
     constructor(x, y, size, hp) {
         this.x = x;
         this.y = y;
         this.size = size;
         this.hp = hp;
+        this.cooldown = 0;
     }
 
     draw(context) {
-        context.drawImage(enemy1, this.x, this.y);
+        context.drawImage(enemy1, this.x, this.y, this.size, this.size);
+    }
+
+    update() {
+        if(this.cooldown == 0) {
+            // this.size += Math.random() * 10 - 5;
+            this.x += Math.random() * 10 - 5;
+            this.y += Math.random() * 10 - 5;
+            this.cooldown = 20;
+        }
+
+        this.cooldown -= 1;
     }
 }
 
@@ -110,6 +123,11 @@ function update() {
         bullet.update();
     }
 
+    for(let index = 0; index < enemies.length; index++) {
+        const enemy = enemies[index];
+        enemy.update();
+    }
+
     draw();
 }
 
@@ -126,22 +144,22 @@ function draw() {
 
     player.draw(context);
 
-    // draw()
-    for(let index = 0; index < bullets.length; index++) {
-        const bullet = bullets[index];
-        bullet.draw(context);
-    }
-
     for(let index = 0; index < enemies.length; index++) {
         const enemy = enemies[index];
         enemy.draw(context);
+    }
+
+
+    for(let index = 0; index < bullets.length; index++) {
+        const bullet = bullets[index];
+        bullet.draw(context);
     }
 
 }
 
 function setup() {
     draw();
-    let enemy = new Enemy(20, 20, 10, 50);
+    let enemy = new Enemy(20, 20, 50, 50);
     enemies.push(enemy);
 }
 
