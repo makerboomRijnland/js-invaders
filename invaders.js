@@ -1,3 +1,9 @@
+const enemyImg = new Image();
+
+enemyImg.src = "enemy.jpg";
+
+
+
 class Enemy {
     x;
     y;
@@ -8,7 +14,9 @@ class Enemy {
         this.y = y;
     }
 
-    draw(context) {}
+    draw(context) {
+        context.drawImage(enemyImg, this.x, this.y, 50, 50);
+    }
 }
 
 let enemies = [];
@@ -115,6 +123,9 @@ function setup() {
     context.fillStyle = "white";
     context.font = "48px Verdana";
     context.fillText("Space Invaders", 10, 50);
+
+    const enemy = new Enemy(20, 20);
+    enemies.push(enemy);
 }
 
 function draw() {
