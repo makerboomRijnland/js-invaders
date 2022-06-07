@@ -1,3 +1,6 @@
+const enemy1 = new Image();
+enemy1.src = "enemy1.jpg";
+
 class Enemy {
     x;
     y;
@@ -12,7 +15,7 @@ class Enemy {
     }
 
     draw(context) {
-        
+        context.drawImage(enemy1, this.x, this.y);
     }
 }
 
@@ -83,6 +86,7 @@ let player = {
 };
 
 let bullets = [];
+let enemies = [];
 
 let direction = {
     left: false,
@@ -128,10 +132,17 @@ function draw() {
         bullet.draw(context);
     }
 
+    for(let index = 0; index < enemies.length; index++) {
+        const enemy = enemies[index];
+        enemy.draw(context);
+    }
+
 }
 
 function setup() {
     draw();
+    let enemy = new Enemy(20, 20, 10, 50);
+    enemies.push(enemy);
 }
 
 function keyDown(event) {
