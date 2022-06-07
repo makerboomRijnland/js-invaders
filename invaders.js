@@ -12,10 +12,13 @@ class Enemy {
         this.x = x;
         this.y = y;
         this.cooldown = 0;
+        this.health = 20;
     }
 
     draw(context) {
-        context.drawImage(enemyImg, this.x, this.y, 50, 50);
+        if(this.health > 0){
+            context.drawImage(enemyImg, this.x, this.y, 50, 50);
+        }
     }
 
     update() {
@@ -38,6 +41,14 @@ class Enemy {
             
         }
         this.cooldown--;
+    }
+    hit(bullet){
+        if (bullet.x >= this.x && 
+            bullet.x <= this.x+50 && 
+            bullet.y >= this.y && 
+            bullet.y <= this.y + 50){
+                this.health -= 10;
+        }
     }
 }
 
@@ -134,6 +145,9 @@ function update() {
     }
     for (let index = 0; index < enemies.length; index++) {
         enemies[index].update();
+        for(let bulletIndex = 0; bulletIndex < bullets.length; bulletIndex++){
+            enemies[index].hit(bullets[bulletIndex])
+        }
     }
     draw();
 }
@@ -162,13 +176,15 @@ function draw() {
 
     player.draw(context);
 
-    for (let index = 0; index < bullets.length; index++) {
-        bullets[index].draw(context);
-    }
 
     for (let index = 0; index < enemies.length; index++) {
         enemies[index].draw(context);
     }
+
+    for (let index = 0; index < bullets.length; index++) {
+        bullets[index].draw(context);
+    }
+
 }
 
 function movePlayer(event) {
