@@ -1,3 +1,23 @@
+class Enemy {
+    x;
+    y;
+    size;
+    hp;
+
+    constructor(x, y, size, hp) {
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.hp = hp;
+    }
+
+    draw(context) {
+        
+    }
+}
+
+// new Enemy(10, 20, 5, 50);
+
 class Bullet {
     x;
     y;
