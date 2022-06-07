@@ -1,3 +1,18 @@
+class Enemy {
+    x;
+    y;
+    health;
+
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    draw(context) {}
+}
+
+let enemies = [];
+
 class Bullet {
     x;
     y;
@@ -21,34 +36,33 @@ class Bullet {
 
 // new Bullet(10, 20);
 
-
 let player = {
     x: 400,
     y: 580,
     cooldown: 0,
 
-    update: function() {
+    update: function () {
         if (keys.left && this.x > 10) {
             this.x -= 10;
         }
-    
+
         if (keys.right && this.x < 790) {
             this.x += 10;
         }
-    
+
         if (keys.up && this.y > 0) {
             this.y -= 10;
         }
-        
+
         if (keys.down && this.y < 580) {
             this.y += 10;
         }
-        if(this.cooldown > 0){
-            this.cooldown--
+        if (this.cooldown > 0) {
+            this.cooldown--;
         }
     },
 
-    draw: function(context) {
+    draw: function (context) {
         context.fillStyle = "pink";
         // context.fillRect(390, 580, 20, 20);
         context.beginPath();
@@ -57,12 +71,10 @@ let player = {
         context.lineTo(this.x + 10, this.y + 20);
         context.fill();
     },
-    shoot: function() {
+    shoot: function () {
         this.cooldown = 10;
         return new Bullet(this.x, this.y);
-
-    }
-    
+    },
 };
 
 let bullets = [];
@@ -78,9 +90,9 @@ let keys = {
 function update() {
     player.update();
 
-    if(keys.shoot && player.cooldown == 0){
+    if (keys.shoot && player.cooldown == 0) {
         let bullet = player.shoot();
-        bullets.push( bullet );
+        bullets.push(bullet);
     }
 
     for (let index = 0; index < bullets.length; index++) {
@@ -90,7 +102,7 @@ function update() {
             bullets[index].y -= 10;
         }
     }
-    drawPlayer();
+    draw();
 }
 
 function setup() {
@@ -105,7 +117,7 @@ function setup() {
     context.fillText("Space Invaders", 10, 50);
 }
 
-function drawPlayer() {
+function draw() {
     let canvas = document.getElementById("invaders-canvas");
     let context = canvas.getContext("2d");
 
@@ -116,6 +128,10 @@ function drawPlayer() {
 
     for (let index = 0; index < bullets.length; index++) {
         bullets[index].draw(context);
+    }
+
+    for (let index = 0; index < enemies.length; index++) {
+        enemies[index].draw(context);
     }
 }
 
