@@ -2,20 +2,30 @@ const enemyImg = new Image();
 
 enemyImg.src = "enemy.jpg";
 
-
-
 class Enemy {
     x;
     y;
     health;
+    cooldown;
 
     constructor(x, y) {
         this.x = x;
         this.y = y;
+        this.cooldown = 0;
     }
 
     draw(context) {
         context.drawImage(enemyImg, this.x, this.y, 50, 50);
+    }
+
+    update() {
+        if (this.cooldown == 0) {
+            this.x += Math.floor(Math.random() * 20 - 10);
+            this.y += Math.floor(Math.random() * 20 - 10);
+            this.cooldown = 15;
+            
+        }
+        this.cooldown--;
     }
 }
 
@@ -109,6 +119,9 @@ function update() {
         } else {
             bullets[index].y -= 10;
         }
+    }
+    for (let index = 0; index < enemies.length; index++) {
+        enemies[index].update();
     }
     draw();
 }
