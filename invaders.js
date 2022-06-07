@@ -8,7 +8,7 @@ class Bullet {
     }
 
     update() {
-        this.y -= 10;
+        this.y -= 20;
     }
 
     draw(context) {
@@ -69,10 +69,16 @@ let direction = {
     right: false,
     up: false,
     down: false,
+    shoot: false,
 };
 
 function update() {
     player.update();
+
+    if(direction.shoot) {
+        let bullet = player.shoot();
+        bullets.push( bullet );
+    }
 
     // update()
     for(let index = 0; index < bullets.length; index++) {
@@ -126,8 +132,9 @@ function keyDown(event) {
             break;
 
         case " ":
-            let bullet = player.shoot();
-            bullets.push( bullet );
+            direction.shoot = true;
+            // let bullet = player.shoot();
+            // bullets.push( bullet );
             break;
     }
 }
@@ -147,6 +154,10 @@ function keyUp(event) {
 
         case "ArrowDown":
             direction.down = false;
+            break;
+
+        case " ":
+            direction.shoot = false;
             break;
     }
 }
