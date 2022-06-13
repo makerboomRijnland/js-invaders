@@ -1,6 +1,51 @@
+class Bullet {
+    color = 'red';
+    x;
+    y;
+
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    move() {
+        this.y -= 5;
+    }
+
+    draw(context) {
+        context.fillStyle = this.color;
+        context.beginPath();
+        context.arc(this.x, this.y, 5, 0, 2 * Math.PI);
+        context.fill();
+    }
+
+}
+
+// let bullet = new Bullet(10, 20);
+
 const player = {
     x: 390,
-    y: 580
+    y: 580,
+
+    move: function() {
+        if(direction.up) {
+            this.y -= 10;
+        }
+        if(direction.down) {
+            this.y += 10;
+        }
+        if(direction.left) {
+            this.x -= 10;
+        }
+        if(direction.right) {
+            this.x += 10;
+        }
+    },
+
+    draw: function(context) {
+        context.fillStyle = 'yellow';
+        context.fillRect(this.x, this.y, 20, 20);
+    }
 };
 
 let bullets = [];
@@ -17,21 +62,10 @@ function setup() {
 }
 
 function update() {
-    if(direction.up) {
-        player.y -= 10;
-    }
-    if(direction.down) {
-        player.y += 10;
-    }
-    if(direction.left) {
-        player.x -= 10;
-    }
-    if(direction.right) {
-        player.x += 10;
-    }
+    player.move();
 
     for(let index = 0; index < bullets.length; index++){
-        bullets[index].y -= 5;
+        bullets[index].move();
     }
 
     draw();
@@ -48,14 +82,10 @@ function draw() {
     context.fillStyle = 'white';
     context.fillText("Space Invaders", 10, 50);
 
-    context.fillStyle = 'yellow';
-    context.fillRect(player.x, player.y, 20, 20);
+    player.draw(context);
 
     for(let index = 0; index < bullets.length; index++){
-        context.fillStyle = 'red';
-        context.beginPath();
-        context.arc(bullets[index].x, bullets[index].y, 5, 0, 2 * Math.PI);
-        context.fill();
+        bullets[index].draw(context);
     }
 }
 
@@ -78,10 +108,8 @@ function movePlayer(event) {
             // player.y += 10;
             break;
         case " ":
-            bullets.push( {
-                x: player.x + 10,
-                y: player.y
-            } );
+            let bullet = new Bullet(player.x + 10, player.y);
+            bullets.push(bullet);
             break;
     }
 }
