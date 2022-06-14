@@ -16,9 +16,7 @@ class Enemy {
     }
 
     draw(context) {
-        if(this.health > 0){
-            context.drawImage(enemyImg, this.x, this.y, 50, 50);
-        }
+        context.drawImage(enemyImg, this.x, this.y, 50, 50);
     }
 
     update() {
@@ -42,12 +40,17 @@ class Enemy {
         }
         this.cooldown--;
     }
+
     hit(bullet){
         if (bullet.x >= this.x && 
             bullet.x <= this.x+50 && 
             bullet.y >= this.y && 
             bullet.y <= this.y + 50){
+
                 this.health -= 10;
+                return true;
+        } else {
+            return false;
         }
     }
 }
@@ -77,12 +80,34 @@ class Bullet {
 
 // new Bullet(10, 20);
 
+const autoPlayer = true;
+
 let player = {
     x: 400,
     y: 580,
     cooldown: 0,
+    score: 0,
+    dx: 0,
+    done: false,
 
     update: function () {
+        if(this.done) {
+            return;
+        }
+        if(keys.auto) {
+            this.dx += Math.random() * 2 - 1;
+            this.dx = Math.max(-50, Math.min(50, this.dx));
+            this.x += this.dx;
+            if(this.x < 0) {
+                this.x = 0;
+                this.dx = 0;
+            }
+            if(this.x > 790) {
+                this.x = 790;
+                this.dx = 0;
+            }
+        }
+
         if (keys.left && this.x > 10) {
             this.x -= 10;
         }
@@ -104,6 +129,10 @@ let player = {
     },
 
     draw: function (context) {
+        context.fillStyle = "white";
+        context.font = "48px Verdana";
+        context.fillText("Score: " + this.score, 10, 580);
+
         context.fillStyle = "pink";
         // context.fillRect(390, 580, 20, 20);
         context.beginPath();
@@ -126,12 +155,13 @@ let keys = {
     right: false,
     left: false,
     shoot: false,
+    auto: false,
 };
 
 function update() {
     player.update();
 
-    if (keys.shoot && player.cooldown == 0) {
+    if (!player.done && (keys.auto || keys.shoot) && player.cooldown == 0) {
         let bullet = player.shoot();
         bullets.push(bullet);
     }
@@ -143,12 +173,29 @@ function update() {
             bullets[index].y -= 10;
         }
     }
+
     for (let index = 0; index < enemies.length; index++) {
         enemies[index].update();
+
         for(let bulletIndex = 0; bulletIndex < bullets.length; bulletIndex++){
-            enemies[index].hit(bullets[bulletIndex])
+
+            if( enemies[index].hit(bullets[bulletIndex]) ) {
+                bullets.splice(bulletIndex, 1);
+                player.score += 1;
+            }
+
+        }
+
+        if( enemies[index].health <= 0 ){
+            enemies.splice(index, 1);
+            player.score += 10;
         }
     }
+
+    if(enemies.length === 0) {
+        player.done = true;
+    }
+
     draw();
 }
 
@@ -163,8 +210,12 @@ function setup() {
     context.font = "48px Verdana";
     context.fillText("Space Invaders", 10, 50);
 
-    const enemy = new Enemy(20, 20);
-    enemies.push(enemy);
+    const max = 70;
+    for(let count = 0; count < max; count++) {
+        let x = (700 / max) * count + 20;
+        const enemy = new Enemy(x, 20);
+        enemies.push(enemy);
+    }
 }
 
 function draw() {
@@ -183,6 +234,12 @@ function draw() {
 
     for (let index = 0; index < bullets.length; index++) {
         bullets[index].draw(context);
+    }
+
+    if(enemies.length == 0) {
+        context.strokeStyle = "pink";
+        context.font = "48px Verdana";
+        context.strokeText("You win, miauw", 250, 350);
     }
 
 }
@@ -204,6 +261,10 @@ function movePlayer(event) {
 
         case " ":
             keys.shoot = true;
+            break;
+
+        case "Enter":
+            keys.auto = !keys.auto;
             break;
     }
 }
