@@ -33,6 +33,16 @@ class Enemy {
 
 
     hit(bullet) {
+        if( bullet.x >= this.x && 
+            bullet.y >= this.y &&
+            bullet.x <= this.x + this.size &&
+            bullet.y <= this.y + this.size
+            ){
+                this.hp -= 10;
+                return true;
+        } else {
+            return false;
+        }
         // Als de bullet de enemy(this) raakt,
         //   haal dan 10 van de hp af.
         //   geef true terug
@@ -138,12 +148,29 @@ function update() {
     }
 
     // Voor elke bullet
-    //    Voor elke enemy
-    //       roep de methode hit() aan op de enemy, met bullet als argument.
-    //       Als hit() true terug geeft
-    //           verwijder de bullet
-    //       Als de enemy hp 0 of kleiner is, verwijder de enemy uit de array.
+    for(let bindex = 0; bindex < bullets.length; bindex++) {
+        const bullet = bullets[bindex];
 
+        // Voor elke enemy
+        for(let eindex = 0; eindex < enemies.length; eindex++) {
+            const enemy = enemies[eindex];
+
+            // Als de enemy geraakt wordt door de bullet
+            if( enemy.hit(bullet) ) {
+                player.score++;
+                // verwijder de bullet
+                bullets.splice(bindex, 1);
+            }
+
+            // Als de enemy hp leeg is
+            if(enemy.hp <= 0) {
+                // verwijder de enemy
+                enemies.splice(eindex, 1);
+            }
+
+        }
+    }
+    
     draw();
 }
 
