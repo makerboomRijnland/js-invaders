@@ -30,6 +30,15 @@ class Enemy {
 
         this.cooldown -= 1;
     }
+
+
+    hit(bullet) {
+        // Als de bullet de enemy(this) raakt,
+        //   haal dan 10 van de hp af.
+        //   geef true terug
+        // Anders 
+        //   geef false terug
+    }
 }
 
 // new Enemy(10, 20, 5, 50);
@@ -127,6 +136,13 @@ function update() {
         const enemy = enemies[index];
         enemy.update();
     }
+
+    // Voor elke bullet
+    //    Voor elke enemy
+    //       roep de methode hit() aan op de enemy, met bullet als argument.
+    //       Als hit() true terug geeft
+    //           verwijder de bullet
+    //       Als de enemy hp 0 of kleiner is, verwijder de enemy uit de array.
 
     draw();
 }
